@@ -35,7 +35,7 @@ float cosfL1 = 0;
 float cosfL2 = 0;
 float cosfL3 = 0;
 
-ADE7880_SPI eic = ADE7880_SPI();
+ADE7880_SPI eic(10); // с версии 1.2.0 необхожимо указывать pin ss
 
 bool flag0 = 1;  // флаг первого запуска накопления
 
@@ -157,3 +157,4 @@ void loop() {
 
   delay(1000);
 }
+
