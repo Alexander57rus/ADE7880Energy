@@ -262,8 +262,8 @@ protected:
 class ADE7880_SPI : public virtual ADE7880
 {
 public:
-    ADE7880_SPI();
-    void begin(int8_t sck = SCK, int8_t miso = MISO, int8_t mosi = MOSI, int8_t ss = SS);
+    ADE7880_SPI(int8_t ssPin); // Конструктор принимает вывод SS
+    void begin(int8_t sck = SCK, int8_t miso = MISO, int8_t mosi = MOSI);
     void settings(uint32_t clock = 200000, uint8_t bitOrder = MSBFIRST, uint8_t dataMode = SPI_MODE3);
     void runDsp();
     void stopDsp();
@@ -277,7 +277,7 @@ public:
     uint32_t _clock;
     uint8_t _bitOrder;
     uint8_t _dataMode;
-    uint8_t _ss;
+    /*uint8_t _ss;*/
 
 protected:
     int _write16Register(const unsigned int reg, const unsigned int val);
@@ -286,6 +286,7 @@ protected:
 	int _write32Register(const unsigned int reg, const uint32_t val);
     int _read16Register(const unsigned int reg);
 	int _read8Register(const uint8_t reg);
+	uint8_t _ss;
 	
 };
 
@@ -319,5 +320,6 @@ private:
     TwoWire i2c = TwoWire();
 #endif
 };
+
 
 #endif
