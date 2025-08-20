@@ -4,28 +4,27 @@
 #include "SPI.h"
 
 SPIClass spi;
-ADE7880_SPI::ADE7880_SPI()
-{
+ADE7880_SPI::ADE7880_SPI(int8_t ssPin) : _ss(ssPin) {
     spi = SPIClass();
     settings();
 }
 
-void ADE7880_SPI::begin(int8_t sck, int8_t miso, int8_t mosi, int8_t ss)
-{
+void ADE7880_SPI::begin(int8_t sck, int8_t miso, int8_t mosi) {
     #ifdef ARDUINO_ARCH_ESP32
-    spi.begin(sck, miso, mosi, ss);
+    spi.begin(sck, miso, mosi, _ss); // Используем выбранный пользователем вывод SS
     #else
     spi.begin();
     #endif
-    _ss = ss;
-    pinMode(_ss, OUTPUT);
-    digitalWrite(_ss, HIGH);
+
+    pinMode(_ss, OUTPUT); // Настраиваем выбранный вывод SS как выход
+    digitalWrite(_ss, HIGH); // Изначально вывод SS устанавливается высоким уровнем (slave de-selected)
     delay(1);
-    for (int i = 0; i < 4; i++)
-    {
-        digitalWrite(_ss, LOW);
+
+    // Обычная последовательность мягкой перезагрузки (4 раза):
+    for (int i = 0; i < 4; i++) {
+        digitalWrite(_ss, LOW); // Активируем slave-select
         delayMicroseconds(10);
-        digitalWrite(_ss, HIGH);
+        digitalWrite(_ss, HIGH); // Деактивируем slave-select
         delayMicroseconds(10);
     }
 }
